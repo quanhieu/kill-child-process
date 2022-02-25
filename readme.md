@@ -1,1 +1,4 @@
-[Reference](https://dustinpfister.github.io/2018/02/05/nodejs-child-process-kill/)
+[Reference](https://sebhastian.com/how-to-stop-node-server/)
+
+[Kill child process](https://github.com/quanhieu/kill-child-process)
+[Kill main process](https://github.com/quanhieu/kill-child-process/tree/http)
