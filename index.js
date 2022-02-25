@@ -1,45 +1,24 @@
-// using spawn
-let spawn = require('child_process').spawn;
- 
-console.log('main process started.');
- 
-let script = spawn('node', ['child.js']);
- 
-script.stdout.on('data', (data) => {
- 
-    // data is a Buffer
-    // log a conversion to a string that is one less byte
-    // this is drop the line feed.
-    console.log(data.slice(0,data.length-1).toString('utf8'));
- 
+const http = require("http");
+
+const server = http.createServer(function (req, res) {
+  const url = req.url;
+
+  if (url === "/") {
+    // do a 200 response
+    res.writeHead(200, { "Content-Type": "text/html" });
+    res.write("<h1>Hello World!<h1>");
+    res.end();
+  }
+  if (url === "/close") {
+    process.send("STOP");
+  }
 });
- 
-// start time
-let st = new Date();
- 
-setInterval(function () {
- 
-    let time = new Date() - st;
- 
-    // if time is over 5 secs, and the script has not been killed...
-    if (time > 5000 && !script.killed) {
- 
-        // pause and kill script
-        script.stdin.pause();
-        script.kill();
-        console.log('child killed');
- 
-    }
- 
-    // After ten seconds kill this main script
-    if (time > 10000) {
- 
-        console.log('ending main process');
-        process.exit();
- 
-    }
- 
-    // log what this script is doing
-    console.log('main: ' + time);
- 
-}, 1000);
+
+server.listen(1234, function () {
+  console.log("server started at port 1234");
+});
+
+process.on("STOP", function(){
+  console.log("Exiting NodeJS server");
+  server.close();
+})
